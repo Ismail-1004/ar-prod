@@ -15,7 +15,8 @@ export const cards = [{
         image: '/images/models/weapons/ak.png',
         modelSrc: '/models/weapons/ak.glb',
         mindSrc: '/targets/weapons/weapon.mind',
-        markerImage: '/images/markers/weapon.PNG'
+        markerImage: '/images/markers/weapon.PNG',
+        scale: 0.8
     },
     {
         id: 3,
