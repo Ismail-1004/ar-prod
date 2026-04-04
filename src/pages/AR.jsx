@@ -83,7 +83,9 @@ function ARPage() {
                     model.scale.setScalar(scale)
 
                     const center = box.getCenter(new THREE.Vector3())
+                    model.position.x = -center.x * scale
                     model.position.y = -center.y * scale
+                    model.position.z = -center.z * scale
 
                     const pivot = new THREE.Group()
                     pivot.add(model)
@@ -164,7 +166,7 @@ function ARPage() {
 
     return (
         <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
-            <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+            <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative', overflow: "hidden" }} />
             <button
                 onClick={handleBack}
                 style={{
