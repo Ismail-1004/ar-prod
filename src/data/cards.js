@@ -14,6 +14,7 @@ export const cards = [{
         description: 'Описание автомата',
         image: '/images/models/weapons/ak.png',
         modelSrc: '/models/weapons/ak.glb',
+        usdzSrc: '/models/weapons/ak.usdz',
         mindSrc: '/targets/weapons/weapon.mind',
         markerImage: '/images/markers/weapon.PNG',
         scale: 0.8

@@ -1,19 +1,29 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import QRCode from 'qrcode'
 import '../../assets/styles/AppModal.css'
 
 function Modal({ card, onClose }) {
     const qrRef = useRef(null)
-    const [step, setStep] = useState(1) // 1 = QR, 2 = маркер
+    const [step, setStep] = useState(1)
+    const [mode, setMode] = useState('marker') // 'marker' | 'surface'
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (!qrRef.current) return
-        const arUrl = `${window.location.origin}/ar/${card.id}`
-        QRCode.toCanvas(qrRef.current, arUrl, {
-            width: 200,
-            margin: 2,
-        })
-    })
+        if (step !== 1) return
+
+        const arUrl = mode === 'marker'
+            ? `${window.location.origin}/ar/${card.id}`
+            : `${window.location.origin}/ar-surface/${card.id}`
+
+        QRCode.toCanvas(qrRef.current, arUrl, { width: 200, margin: 2 })
+    }, [card.id, mode, step])
+
+    const handleSurfaceDirect = () => {
+        onClose()
+        navigate(`/ar-surface/${card.id}`)
+    }
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -25,58 +35,104 @@ function Modal({ card, onClose }) {
                     <div></div>
                 </div>
 
-                {/* Переключатель шагов */}
-                <div className="modal__steps">
+                {/* Выбор режима AR */}
+                <div className="modal__mode-toggle">
                     <button
-                        className={`modal__step-btn ${step === 1 ? 'active' : ''}`}
-                        onClick={() => setStep(1)}
+                        className={`modal__mode-btn ${mode === 'marker' ? 'active' : ''}`}
+                        onClick={() => { setMode('marker'); setStep(1) }}
                     >
-                        1. Сканируй QR
+                        По QR-маркеру
                     </button>
                     <button
-                        className={`modal__step-btn ${step === 2 ? 'active' : ''}`}
-                        onClick={() => setStep(2)}
+                        className={`modal__mode-btn ${mode === 'surface' ? 'active' : ''}`}
+                        onClick={() => { setMode('surface'); setStep(1) }}
                     >
-                        2. Наведи на маркер
+                        На поверхность
                     </button>
                 </div>
 
-                {/* Шаг 1 — QR код */}
-                {step === 1 && (
-                    <div className="modal__content">
-                        <p className="modal__hint">
-                            Отсканируй QR-код камерой телефона
-                        </p>
-                        <div className="qr-code-container">
-                            <canvas ref={qrRef} />
-                        </div>
+                {/* Переключатель шагов — только для marker режима */}
+                {mode === 'marker' && (
+                    <div className="modal__steps">
                         <button
-                            className="modal__next-btn"
+                            className={`modal__step-btn ${step === 1 ? 'active' : ''}`}
+                            onClick={() => setStep(1)}
+                        >
+                            1. Сканируй QR
+                        </button>
+                        <button
+                            className={`modal__step-btn ${step === 2 ? 'active' : ''}`}
                             onClick={() => setStep(2)}
                         >
-                            Далее →
+                            2. Наведи на маркер
                         </button>
                     </div>
                 )}
 
-                {/* Шаг 2 — маркер */}
-                {step === 2 && (
+                {/* MARKER MODE */}
+                {mode === 'marker' && (
+                    <>
+                        {step === 1 && (
+                            <div className="modal__content">
+                                <p className="modal__hint">
+                                    Отсканируй QR-код камерой телефона
+                                </p>
+                                <div className="qr-code-container">
+                                    <canvas ref={qrRef} />
+                                </div>
+                                <button
+                                    className="modal__next-btn"
+                                    onClick={() => setStep(2)}
+                                >
+                                    Далее →
+                                </button>
+                            </div>
+                        )}
+
+                        {step === 2 && (
+                            <div className="modal__content">
+                                <p className="modal__hint">
+                                    Наведи камеру телефона на эту картинку
+                                </p>
+                                <div className="marker-container">
+                                    <img
+                                        src={card.markerImage}
+                                        alt="AR маркер"
+                                        className="marker-image"
+                                    />
+                                </div>
+                                <button
+                                    className="modal__next-btn"
+                                    onClick={() => setStep(1)}
+                                >
+                                    ← Назад
+                                </button>
+                            </div>
+                        )}
+                    </>
+                )}
+
+                {/* SURFACE MODE */}
+                {mode === 'surface' && (
                     <div className="modal__content">
                         <p className="modal__hint">
-                            Наведи камеру телефона на эту картинку
+                            Модель появится на любой плоской поверхности
                         </p>
-                        <div className="marker-container">
-                            <img
-                                src={card.markerImage}
-                                alt="AR маркер"
-                                className="marker-image"
-                            />
+
+                        {/* QR для открытия с другого устройства */}
+                        <div className="qr-code-container">
+                            <canvas ref={qrRef} />
                         </div>
+
+                        <p className="modal__hint" style={{ marginTop: 8 }}>
+                            Или открой прямо на этом устройстве
+                        </p>
+
                         <button
-                            className="modal__next-btn"
-                            onClick={() => setStep(1)}
+                            className="modal__next-btn modal__next-btn--primary"
+                            onClick={handleSurfaceDirect}
                         >
-                            ← Назад
+                            Открыть AR здесь
                         </button>
                     </div>
                 )}
