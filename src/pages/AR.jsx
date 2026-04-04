@@ -1,14 +1,53 @@
 import { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
 import { cards } from "../data/cards";
 
 function ARPage() {
     const { id } = useParams()
     const navigate = useNavigate()
     const containerRef = useRef(null)
+    const mindarRef = useRef(null)
+    const isStartedRef = useRef(false)
 
     const card = cards.find(c => c.id === Number(id))
+
+    const stopAR = async () => {
+        // Сначала останавливаем animation loop
+        if (mindarRef.current?.renderer) {
+            mindarRef.current.renderer.setAnimationLoop(null)
+        }
+
+        // Останавливаем MindAR только если запустился
+        if (mindarRef.current && isStartedRef.current) {
+            try {
+                await mindarRef.current.stop()
+            } catch (e) {
+                console.warn('MindAR stop:', e)
+            }
+        }
+
+        // Останавливаем все видеопотоки камеры
+        document.querySelectorAll('video').forEach(video => {
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop())
+                video.srcObject = null
+            }
+        })
+
+        // Убираем все элементы которые MindAR добавил в body и container
+        // MindAR создаёт canvas, video и div снаружи нашего контейнера
+        document.querySelectorAll('.mindar-ui-overlay').forEach(el => el.remove())
+        document.querySelectorAll('.mindar-ui-loading').forEach(el => el.remove())
+        document.querySelectorAll('.mindar-ui-scanning').forEach(el => el.remove())
+
+        // Чистим сам контейнер
+        if (containerRef.current) {
+            containerRef.current.innerHTML = ''
+        }
+
+        mindarRef.current = null
+        isStartedRef.current = false
+    }
 
     useEffect(() => {
         if (!card) return
@@ -23,6 +62,8 @@ function ARPage() {
                 filterBeta: 0.01,
             })
 
+            mindarRef.current = mindarThree
+
             const { renderer, scene, camera } = mindarThree
             const anchor = mindarThree.addAnchor(0)
 
@@ -31,8 +72,18 @@ function ARPage() {
             loader.load(
                 card.modelSrc,
                 (gltf) => {
+                    if (!mindarRef.current) return
+
                     const model = gltf.scene
-                    model.scale.set(0.1, 0.1, 0.1)
+
+                    const box = new THREE.Box3().setFromObject(model)
+                    const size = box.getSize(new THREE.Vector3())
+                    const maxDim = Math.max(size.x, size.y, size.z)
+                    const scale = 0.75 / maxDim
+                    model.scale.setScalar(scale)
+
+                    const center = box.getCenter(new THREE.Vector3())
+                    model.position.y = -center.y * scale
 
                     const pivot = new THREE.Group()
                     pivot.add(model)
@@ -42,12 +93,7 @@ function ARPage() {
                     let previousX = 0
                     let velocity = 0
 
-                    const onTouchStart = (e) => {
-                        isDragging = true
-                        velocity = 0
-                        previousX = e.touches[0].clientX
-                    }
-
+                    const onTouchStart = (e) => { isDragging = true; velocity = 0; previousX = e.touches[0].clientX }
                     const onTouchMove = (e) => {
                         if (!isDragging) return
                         const deltaX = e.touches[0].clientX - previousX
@@ -67,6 +113,8 @@ function ARPage() {
                     const onMouseUp = () => { isDragging = false }
 
                     const el = containerRef.current
+                    if (!el) return
+
                     el.addEventListener('touchstart', onTouchStart)
                     el.addEventListener('touchmove', onTouchMove)
                     el.addEventListener('touchend', onTouchEnd)
@@ -99,20 +147,26 @@ function ARPage() {
             scene.add(ambientLight, dirLight)
 
             await mindarThree.start()
+            isStartedRef.current = true
         }
 
         start()
+
+        return () => { stopAR() }
     }, [card])
+
+    const handleBack = async () => {
+        await stopAR()
+        navigate('/')
+    }
 
     if (!card) return <div>Карточка не найдена</div>
 
     return (
         <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
             <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
-
-            {/* Кнопка назад */}
             <button
-                onClick={() => navigate('/')}
+                onClick={handleBack}
                 style={{
                     position: 'absolute',
                     top: 16,

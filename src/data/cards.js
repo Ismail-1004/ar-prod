@@ -5,7 +5,7 @@ export const cards = [{
         description: 'Описание танка',
         image: '/images/models/tanks/tank.png',
         modelSrc: '/models/tanks/tank.glb',
-        mindSrc: '/targets/tank.mind',
+        mindSrc: '/targets/tank/tank.mind',
     },
     {
         id: 2,
