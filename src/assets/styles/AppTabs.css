@@ -1,0 +1,28 @@
+.tabs {
+    background: #171A1C;
+    box-shadow: 0px 4px 20px 0px #81ECFF0D;
+    border-radius: 12px;
+    padding: 6px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.tabs__item {
+    text-align: center;
+    width: 100%;
+}
+
+.tabs__item-title {
+    color: #AAABAD;
+    font-weight: bold;
+}
+
+.tabs__item.active {
+    border-left: 2px solid #22d1f0;
+    background: #81ecff20;
+    width: 100%;
+    border-radius: 8px;
+    padding: 7px 6px;
+}

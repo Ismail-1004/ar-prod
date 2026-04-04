@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+.header {
+    padding: 18px 15px;
+    background: #0C0E1099;
+    box-shadow: 0px 4px 20px 0px #81ECFF0D;
+    backdrop-filter: blur(40px);
+    border-bottom: 1px solid #e1e1e174;
+}
+
+.header__nav-title {
+    color: #81ECFF;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Montserrat';
+}
