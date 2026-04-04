@@ -78,8 +78,8 @@ function ARPage() {
 
                     const box = new THREE.Box3().setFromObject(model)
                     const size = box.getSize(new THREE.Vector3())
-                    const maxDim = Math.max(size.x, size.y, size.z)
-                    const scale = 0.75 / maxDim
+                    // const maxDim = Math.max(size.x, size.y, size.z)
+                    const scale = 1
                     model.scale.setScalar(scale)
 
                     const center = box.getCenter(new THREE.Vector3())
