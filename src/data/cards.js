@@ -21,10 +21,11 @@ export const cards = [{
     },
     {
         id: 3,
-        title: 'Карточка 3',
+        title: 'Солдат',
         description: 'Описание третьей карточки',
         image: '/images/models/tanks/tank.png',
         modelSrc: '/models/tanks/tank.glb',
         mindSrc: '/targets/tank.mind',
+        usdzSrc: '/models/soldiers/soldier-1.usdz',
     },
 ]
