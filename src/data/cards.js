@@ -6,6 +6,7 @@ export const cards = [{
         image: '/images/models/tanks/tank.png',
         modelSrc: '/models/tanks/tank.glb',
         mindSrc: '/targets/tank/tank.mind',
+        markerImage: '/images/markers/tank.PNG'
     },
     {
         id: 2,
