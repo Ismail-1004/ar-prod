@@ -14,7 +14,8 @@ export const cards = [{
         description: 'Описание автомата',
         image: '/images/models/weapons/ak.png',
         modelSrc: '/models/weapons/ak.glb',
-        mindSrc: '/targets/ak.mind',
+        mindSrc: '/targets/weapons/weapon.mind',
+        markerImage: '/images/markers/weapon.PNG'
     },
     {
         id: 3,
