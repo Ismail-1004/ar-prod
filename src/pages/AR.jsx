@@ -79,13 +79,15 @@ function ARPage() {
                     const box = new THREE.Box3().setFromObject(model)
                     const size = box.getSize(new THREE.Vector3())
                     const maxDim = Math.max(size.x, size.y, size.z)
-                    const scale = (card.scale || 1.6) / maxDim
-                    model.scale.setScalar(scale)
+                    const baseScale = 1.6 / maxDim
+                    const finalScale = baseScale * (card.scale || 1)
+                    
+                    model.scale.setScalar(finalScale)
 
                     const center = box.getCenter(new THREE.Vector3())
-                    model.position.x = -center.x * scale
-                    model.position.y = -center.y * scale
-                    model.position.z = -center.z * scale
+                    model.position.x = -center.x * baseScale
+                    model.position.y = -center.y * baseScale
+                    model.position.z = -center.z * baseScale
 
                     const pivot = new THREE.Group()
                     pivot.add(model)
