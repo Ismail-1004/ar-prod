@@ -150,6 +150,35 @@ function ARPage() {
 
             await mindarThree.start()
             isStartedRef.current = true
+
+            const fixCamera = () => {
+                const video = containerRef.current.querySelector('video')
+                const canvas = containerRef.current.querySelector('canvas')
+
+                if (!video || !canvas) return
+
+                const vw = window.innerWidth
+                const vh = window.innerHeight
+
+                // Делает одинаковое поведение
+                video.style.position = 'absolute'
+                canvas.style.position = 'absolute'
+
+                video.style.top = '0'
+                video.style.left = '0'
+                canvas.style.top = '0'
+                canvas.style.left = '0'
+
+                video.style.width = vw + 'px'
+                video.style.height = vh + 'px'
+                canvas.style.width = vw + 'px'
+                canvas.style.height = vh + 'px'
+
+                video.style.objectFit = 'cover' // ВАЖНО
+            }
+
+            fixCamera()
+            window.addEventListener('resize', fixCamera)
         }
 
         start()
