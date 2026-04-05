@@ -91,7 +91,7 @@ function ARSurfacePage() {
             const box = new THREE.Box3().setFromObject(model)
             const size = box.getSize(new THREE.Vector3())
             const maxDim = Math.max(size.x, size.y, size.z)
-            model.scale.setScalar(0.3 / maxDim)
+            model.scale.setScalar(0.15 / maxDim)
 
             const center = box.getCenter(new THREE.Vector3())
             model.position.y = -center.y * (0.3 / maxDim)

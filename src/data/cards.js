@@ -28,4 +28,13 @@ export const cards = [{
         mindSrc: '/targets/tank.mind',
         usdzSrc: '/models/soldiers/soldier-1.usdz',
     },
+    {
+        id: 4,
+        title: 'Девушка',
+        description: 'Описание четвертое карточки',
+        image: '/images/models/girl/girl.png',
+        modelSrc: '/models/tanks/tank.glb',
+        mindSrc: '/targets/tank.mind',
+        usdzSrc: '/models/girl/girl.usdz',
+    }
 ]
