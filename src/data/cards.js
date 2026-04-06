@@ -5,6 +5,7 @@ export const cards = [{
         description: 'Описание танка',
         image: '/images/models/tanks/tank.png',
         modelSrc: '/models/tanks/tank.glb',
+        usdzSrc: '/models/tanks/place.usdz',
         mindSrc: '/targets/tank/tank.mind',
         markerImage: '/images/markers/tank.PNG'
     },
