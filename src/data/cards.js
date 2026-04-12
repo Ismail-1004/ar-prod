@@ -40,7 +40,7 @@ export const cards = [{
     },
     {
         id: 5,
-        title: 'Галлереия',
+        title: 'Галерея',
         description: 'Описание пятой карточки',
         image: '/images/models/gallery/gallery.png',
         modelSrc: '/models/tanks/tank.glb',
